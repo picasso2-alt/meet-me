@@ -9,7 +9,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,600;0,9..144,900;1,9..144,300;1,9..144,400;1,9..144,600;1,9..144,900&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-html,body{width:100%;height:100%;background:#000;overflow:hidden;font-family:'Fraunces',Georgia,serif}
+html,body{width:100%;height:100%;background:var(--bg,#F5EFE6);overflow:hidden;font-family:'Fraunces',Georgia,serif}
 
 /* ── Stage & Canvas ── */
 #stage{position:fixed;inset:0;display:flex;align-items:center;justify-content:center}
@@ -24,49 +24,14 @@ html,body{width:100%;height:100%;background:#000;overflow:hidden;font-family:'Fr
 .ai.show{opacity:1;transform:translateY(0)}
 @media(prefers-reduced-motion:reduce){.ai{transition:opacity .25s ease!important;transform:none!important}}
 
-/* ── Blob transition overlay ── */
-#blob-overlay{position:fixed;inset:0;background:var(--bg,#F5EFE6);z-index:9999;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .18s ease}
-#blob-overlay.show{opacity:1;pointer-events:all}
-.bv{display:none}.bv.on{display:flex;align-items:center;justify-content:center}
-
-/* ── BLOB A: slow organic flow through 5 very different shapes ── */
-.bA{width:145px;height:145px;background:var(--text,#1A1A1A);animation:bAm 3.4s ease-in-out infinite}
-@keyframes bAm{
-  0%  {border-radius:62% 38% 26% 74%/54% 32% 68% 46%}
-  20% {border-radius:34% 66% 72% 28%/68% 24% 76% 32%}
-  40% {border-radius:76% 24% 44% 56%/28% 72% 36% 64%}
-  60% {border-radius:28% 72% 58% 42%/62% 46% 54% 38%}
-  80% {border-radius:54% 46% 30% 70%/38% 62% 28% 72%}
-  100%{border-radius:62% 38% 26% 74%/54% 32% 68% 46%}
+/* ── Sail transition overlay ── */
+#sail-overlay{
+  position:fixed;inset:0;background:var(--bg,#F5EFE6);
+  z-index:9999;display:flex;align-items:center;justify-content:center;
+  opacity:0;pointer-events:none;transition:opacity .22s ease
 }
-
-/* ── BLOB B: two blobs orbiting with size-morph deformation ── */
-.bBw{position:relative;width:200px;height:200px}
-.bB1,.bB2{position:absolute;background:var(--text,#1A1A1A)}
-.bB1{width:104px;height:94px;top:18px;left:34px;border-radius:58% 42% 38% 62%/50% 64% 36% 50%;animation:bB1 2.2s ease-in-out infinite}
-.bB2{width:68px;height:78px;bottom:18px;right:28px;border-radius:42% 58% 62% 38%/64% 36% 64% 36%;animation:bB2 2.2s ease-in-out infinite}
-@keyframes bB1{
-  0%  {transform:translate(-28px,-12px) rotate(-10deg);border-radius:58% 42% 38% 62%/50% 64% 36% 50%;width:104px;height:94px}
-  50% {transform:translate(28px,12px) rotate(10deg);border-radius:38% 62% 58% 42%/64% 36% 52% 48%;width:90px;height:112px}
-  100%{transform:translate(-28px,-12px) rotate(-10deg);border-radius:58% 42% 38% 62%/50% 64% 36% 50%;width:104px;height:94px}
-}
-@keyframes bB2{
-  0%  {transform:translate(22px,10px) rotate(8deg);border-radius:42% 58% 62% 38%/64% 36% 64% 36%;width:68px;height:78px}
-  50% {transform:translate(-22px,-10px) rotate(-8deg);border-radius:62% 38% 42% 58%/36% 64% 36% 64%;width:80px;height:62px}
-  100%{transform:translate(22px,10px) rotate(8deg);border-radius:42% 58% 62% 38%/64% 36% 64% 36%;width:68px;height:78px}
-}
-
-/* ── BLOB C: alive, uneven, irregular — NOT a simple scale pulse ── */
-.bC{width:128px;height:128px;background:var(--text,#1A1A1A);animation:bCp 1.8s ease-in-out infinite}
-@keyframes bCp{
-  0%  {border-radius:72% 28% 44% 56%/46% 70% 30% 54%;transform:scale(1,1) rotate(0deg)}
-  14% {border-radius:44% 56% 70% 30%/64% 40% 60% 40%;transform:scale(1.14,.9) rotate(5deg)}
-  30% {border-radius:30% 70% 26% 74%/74% 26% 56% 44%;transform:scale(.9,1.12) rotate(-6deg)}
-  48% {border-radius:64% 36% 54% 46%/34% 66% 46% 54%;transform:scale(1.08,1.06) rotate(3deg)}
-  66% {border-radius:26% 74% 66% 34%/58% 42% 68% 32%;transform:scale(.95,.93) rotate(-4deg)}
-  82% {border-radius:56% 44% 36% 64%/42% 58% 36% 64%;transform:scale(1.06,.97) rotate(2deg)}
-  100%{border-radius:72% 28% 44% 56%/46% 70% 30% 54%;transform:scale(1,1) rotate(0deg)}
-}
+#sail-overlay.show{opacity:1;pointer-events:all}
+.sv{display:none}.sv.on{display:flex;align-items:center;justify-content:center}
 
 /* ── Progress bar ── */
 #pbar{position:fixed;bottom:0;left:0;height:3px;background:var(--accent,#C8102E);width:0%;z-index:1000;transition-property:width}
@@ -100,12 +65,8 @@ body:hover #playbtn,body.touched #playbtn{opacity:1}
 a.clink{color:var(--text);text-decoration:none;transition:color .22s ease, text-decoration-color .22s ease}
 a.clink:hover{color:var(--accent,#C8102E);text-decoration:underline;text-decoration-color:var(--accent,#C8102E)}
 
-/* ── Reduced-motion: stop blob CSS animations ── */
-@media(prefers-reduced-motion:reduce){
-  .bA{animation:none!important;border-radius:50%!important}
-  .bB1,.bB2{animation:none!important;border-radius:50%!important}
-  .bC{animation:none!important;border-radius:50%!important}
-}
+/* ── Reduced-motion: skip sail overlay ── */
+@media(prefers-reduced-motion:reduce){#sail-overlay{display:none!important}}
 
 /* ── Chip style ── */
 .chip{font-size:36px;font-weight:400;padding:22px 52px;background:var(--chip-bg);border:2px solid rgba(26,26,26,.13)}
@@ -176,11 +137,58 @@ a.clink:hover{color:var(--accent,#C8102E);text-decoration:underline;text-decorat
 </head>
 <body>
 
-<!-- Blob transition overlay — 3 distinct variants picked randomly -->
-<div id="blob-overlay">
-  <div class="bv" id="bv0"><div class="bA"></div></div>
-  <div class="bv" id="bv1"><div class="bBw"><div class="bB1"></div><div class="bB2"></div></div></div>
-  <div class="bv" id="bv2"><div class="bC"></div></div>
+<!-- Sail transition overlay — two distinct 200×200 sail animations -->
+<div id="sail-overlay" aria-hidden="true">
+
+  <!-- Variant A: two sails orbiting each other with asymmetric deformation -->
+  <div class="sv" id="sv0">
+    <svg width="200" height="200" viewBox="0 0 200 200" fill="none">
+      <!-- Sail 1: orbits clockwise, deforms as it turns -->
+      <g>
+        <animateTransform attributeName="transform" type="rotate" from="0 100 100" to="360 100 100" dur="3s" repeatCount="indefinite"/>
+        <path fill="#1A1A1A">
+          <animate attributeName="d"
+            values="M 100,42 C 97,52 92,63 88,74 C 95,77 104,75 109,72 C 107,62 104,52 100,42 Z;
+                    M 100,40 C 94,51 88,64 83,78 C 91,82 102,80 109,76 C 108,63 105,51 100,40 Z;
+                    M 100,43 C 98,53 93,64 90,75 C 97,78 105,76 110,73 C 108,63 105,53 100,43 Z;
+                    M 100,42 C 97,52 92,63 88,74 C 95,77 104,75 109,72 C 107,62 104,52 100,42 Z"
+            dur="1.5s" repeatCount="indefinite" calcMode="spline"
+            keySplines="0.4 0 0.6 1;0.4 0 0.6 1;0.4 0 0.6 1"/>
+        </path>
+      </g>
+      <!-- Sail 2: 180° offset, slightly smaller, half opacity -->
+      <g>
+        <animateTransform attributeName="transform" type="rotate" from="180 100 100" to="540 100 100" dur="3s" repeatCount="indefinite"/>
+        <path fill="#1A1A1A" opacity=".48">
+          <animate attributeName="d"
+            values="M 100,45 C 98,54 94,64 91,73 C 97,76 105,75 110,72 C 108,63 105,54 100,45 Z;
+                    M 100,44 C 96,54 91,66 88,77 C 95,80 104,78 110,74 C 109,63 106,53 100,44 Z;
+                    M 100,46 C 99,55 95,65 92,74 C 98,77 106,76 111,73 C 109,64 106,55 100,46 Z;
+                    M 100,45 C 98,54 94,64 91,73 C 97,76 105,75 110,72 C 108,63 105,54 100,45 Z"
+            dur="1.5s" repeatCount="indefinite" calcMode="spline"
+            keySplines="0.4 0 0.6 1;0.4 0 0.6 1;0.4 0 0.6 1" begin="0.75s"/>
+        </path>
+      </g>
+    </svg>
+  </div>
+
+  <!-- Variant B: single sail, alive asymmetric wobble — not a simple scale pulse -->
+  <div class="sv" id="sv1">
+    <svg width="200" height="200" viewBox="0 0 200 200" fill="none">
+      <path fill="#1A1A1A">
+        <animate attributeName="d"
+          values="M 100,28 C 96,52 89,78 83,112 C 96,117 111,115 121,110 C 117,88 110,60 100,28 Z;
+                  M 100,26 C 92,51 83,80 75,118 C 90,124 108,121 122,115 C 119,90 112,58 100,26 Z;
+                  M 100,30 C 98,55 94,83 92,116 C 105,121 118,118 126,112 C 121,87 113,61 100,30 Z;
+                  M 100,27 C 94,53 86,81 80,115 C 94,120 110,117 121,112 C 117,89 110,60 100,27 Z;
+                  M 100,29 C 97,54 91,80 86,113 C 99,118 113,116 122,111 C 118,88 111,60 100,29 Z;
+                  M 100,28 C 96,52 89,78 83,112 C 96,117 111,115 121,110 C 117,88 110,60 100,28 Z"
+          dur="2.4s" repeatCount="indefinite" calcMode="spline"
+          keySplines="0.3 0 0.7 1;0.3 0 0.7 1;0.3 0 0.7 1;0.3 0 0.7 1;0.3 0 0.7 1"/>
+      </path>
+    </svg>
+  </div>
+
 </div>
 
 <div id="pauseind">PAUSED</div>
@@ -206,11 +214,28 @@ a.clink:hover{color:var(--accent,#C8102E);text-decoration:underline;text-decorat
   <!-- SLIDE 1 — The Hook                     -->
   <!-- ═══════════════════════════════════════ -->
   <section class="slide" id="s1" data-label="The Hook">
-    <!-- Decorative background blob -->
-    <svg style="position:absolute;width:860px;top:50%;left:50%;transform:translate(-50%,-52%);pointer-events:none;opacity:.055" viewBox="0 0 860 760" fill="none" aria-hidden="true">
-      <path d="M430,70 C610,48 770,165 788,340 C806,515 700,660 520,698 C340,736 140,668 72,492 C4,316 68,158 208,96 C284,58 358,94 430,70Z" fill="#1A1A1A">
-        <animateTransform attributeName="transform" type="scale" values="1;1.018;.99;1.012;1" dur="9s" repeatCount="indefinite" additive="sum"/>
-      </path>
+    <!-- Two background sails: mainsail + gennaker, hand-drawn brush style -->
+    <svg style="position:absolute;width:1400px;height:1000px;top:50%;left:50%;transform:translate(-50%,-52%);pointer-events:none;opacity:.065" viewBox="0 0 1400 1000" fill="none" aria-hidden="true">
+      <!-- Mast: slightly irregular vertical -->
+      <path d="M 306,958 C 305,720 302,420 308,28" stroke="#1A1A1A" stroke-width="5" stroke-linecap="round" opacity=".7"/>
+      <!-- Gennaker — red, wide triangular shape, slightly behind mainsail -->
+      <path d="M 584,22 C 514,205 384,520 290,942 C 462,954 730,938 1022,874 C 938,618 772,328 584,22 Z" fill="#C8102E" opacity=".58"/>
+      <!-- Gennaker leech overstroke -->
+      <path d="M 584,22 C 938,618 1022,874" stroke="#C8102E" stroke-width="5" fill="none" opacity=".28" stroke-linecap="round"/>
+      <!-- Gennaker luff overstroke -->
+      <path d="M 584,22 C 514,205 384,520 290,942" stroke="#C8102E" stroke-width="4" fill="none" opacity=".22" stroke-linecap="round"/>
+      <!-- Gennaker crease -->
+      <path d="M 618,58 C 660,280 660,560 630,872" stroke="#C8102E" stroke-width="3.5" fill="none" opacity=".20" stroke-linecap="round"/>
+      <!-- Mainsail — dark, triangular, convex leech, on top -->
+      <path d="M 308,30 C 300,225 292,525 294,950 C 422,934 562,904 702,882 C 642,652 492,340 308,30 Z" fill="#1A1A1A" opacity=".72"/>
+      <!-- Mainsail leech overstroke -->
+      <path d="M 308,30 C 492,340 642,652 702,882" stroke="#1A1A1A" stroke-width="5" fill="none" opacity=".25" stroke-linecap="round"/>
+      <!-- Mainsail luff overstroke -->
+      <path d="M 308,30 C 300,225 292,525 294,950" stroke="#1A1A1A" stroke-width="4" fill="none" opacity=".20" stroke-linecap="round"/>
+      <!-- Mainsail crease — fabric panel line -->
+      <path d="M 348,78 C 386,290 412,560 428,912" stroke="#1A1A1A" stroke-width="3" fill="none" opacity=".16" stroke-linecap="round"/>
+      <!-- Boom: slightly curved base of mainsail -->
+      <path d="M 285,950 C 380,966 540,958 660,928" stroke="#1A1A1A" stroke-width="5.5" stroke-linecap="round" opacity=".38"/>
     </svg>
     <div id="s1words" style="text-align:center;position:relative;z-index:1;max-width:1500px;line-height:1.1"></div>
   </section>
@@ -219,16 +244,24 @@ a.clink:hover{color:var(--accent,#C8102E);text-decoration:underline;text-decorat
   <!-- SLIDE 2 — Identity                      -->
   <!-- ═══════════════════════════════════════ -->
   <section class="slide" id="s2" data-label="Identity">
-    <!-- Sail SVG — top right, hand-drawn feel -->
-    <svg class="ai" style="position:absolute;top:72px;right:104px;width:210px;height:260px;opacity:.82" viewBox="0 0 210 260" fill="none" aria-label="Hand-drawn asymmetric sails">
-      <!-- Mast: slightly wobbly, not perfectly straight -->
-      <path d="M98,248 C97,210 96,160 99,24" stroke="#1A1A1A" stroke-width="3.2" stroke-linecap="round"/>
-      <!-- Main sail: brushy, irregular, left-bellying -->
-      <path d="M97,232 C84,198 58,158 28,108 C14,82 8,58 12,38 C38,64 62,88 80,112 C100,140 110,168 118,202 C122,220 114,238 97,232Z" fill="#1A1A1A" opacity=".7"/>
-      <!-- Second sail: red, more slender, asymmetric, leans differently -->
-      <path d="M102,218 C112,188 138,148 162,104 C174,80 182,54 176,32 C162,52 146,78 134,108 C122,136 114,164 108,194 C104,210 100,228 102,218Z" fill="#C8102E" opacity=".52"/>
-      <!-- Small boom hint at base -->
-      <path d="M82,244 C88,246 104,248 118,244" stroke="#1A1A1A" stroke-width="2" stroke-linecap="round" opacity=".5"/>
+    <!-- Two sails: mainsail + gennaker, hand-drawn brush feel -->
+    <svg class="ai" style="position:absolute;top:56px;right:88px;width:248px;height:308px;opacity:.88" viewBox="0 0 248 308" fill="none" aria-label="Hand-drawn mainsail and gennaker">
+      <!-- Mast: slightly wobbly, not a ruler line -->
+      <path d="M 96,298 C 96,234 95,148 99,14" stroke="#1A1A1A" stroke-width="3.4" stroke-linecap="round"/>
+      <!-- Gennaker — red, full balloon shape, behind mainsail -->
+      <path d="M 138,18 C 204,42 242,148 228,244 C 214,290 178,308 146,310 C 118,310 96,298 93,288 C 72,232 80,110 138,18 Z" fill="#C8102E" opacity=".46"/>
+      <!-- Gennaker inner crease — fabric tension -->
+      <path d="M 154,34 C 172,102 178,190 168,272" stroke="#C8102E" stroke-width="1.6" stroke-linecap="round" fill="none" opacity=".38"/>
+      <!-- Gennaker outer edge sketch — slightly rough second line -->
+      <path d="M 138,18 C 208,46 248,154 232,248 C 218,294 180,312 147,313" stroke="#C8102E" stroke-width="1" stroke-linecap="round" fill="none" opacity=".22"/>
+      <!-- Mainsail — dark, triangular, convex leech, on top -->
+      <path d="M 99,17 C 96,88 95,188 95,292 C 124,286 154,272 180,252 C 167,198 140,108 99,17 Z" fill="#1A1A1A" opacity=".70"/>
+      <!-- Mainsail inner crease — slight bow in the cloth -->
+      <path d="M 112,38 C 124,96 132,180 138,252" stroke="#F5EFE6" stroke-width="1.3" stroke-linecap="round" fill="none" opacity=".18"/>
+      <!-- Mainsail leech sketch overstroke — organic edge -->
+      <path d="M 99,17 C 164,55 186,158 178,254" stroke="#1A1A1A" stroke-width="1.2" stroke-linecap="round" fill="none" opacity=".20"/>
+      <!-- Boom: slightly curved, heavy stroke -->
+      <path d="M 90,292 C 106,298 144,298 162,288" stroke="#1A1A1A" stroke-width="2.6" stroke-linecap="round" opacity=".48"/>
     </svg>
     <div style="text-align:center;max-width:1460px;display:flex;flex-direction:column;align-items:center">
       <div class="ai s2-name" style="font-size:112px;font-weight:900;line-height:1;margin-bottom:30px">Nicolas Bosshardt</div>
@@ -241,11 +274,24 @@ a.clink:hover{color:var(--accent,#C8102E);text-decoration:underline;text-decorat
   <!-- SLIDE 3 — Philosophy                    -->
   <!-- ═══════════════════════════════════════ -->
   <section class="slide" id="s3" data-label="Philosophy">
-    <!-- Inflated sail shape — abstract, asymmetric, wind-filled -->
-    <svg style="position:absolute;right:-60px;top:50%;transform:translateY(-54%);width:460px;height:600px;pointer-events:none;opacity:.065" viewBox="0 0 460 600" fill="none" aria-hidden="true">
-      <path d="M340,22 C418,58 478,168 464,298 C452,404 398,494 306,548 C214,602 98,594 44,510 C-8,428 8,304 44,210 C82,112 132,42 210,18 C256,4 296,2 340,22Z" fill="#C8102E"/>
-      <!-- Inner highlight crease — suggests fabric tension -->
-      <path d="M280,60 C320,120 340,220 320,340 C304,428 260,500 210,540" stroke="#C8102E" stroke-width="6" fill="none" opacity=".3"/>
+    <!-- Two triangular sails — hand-drawn Bermuda rig style, organic brush strokes -->
+    <svg style="position:absolute;left:-55px;top:50%;transform:translateY(-54%);width:480px;height:620px;pointer-events:none;opacity:.09" viewBox="0 0 480 620" fill="none" aria-hidden="true">
+      <!-- Sail 1 — dark, classic triangular mainsail shape, slight belly on leech -->
+      <path d="M 108,24 C 86,165 68,365 60,572 C 142,578 232,580 376,568 C 312,412 228,218 108,24 Z" fill="#1A1A1A"/>
+      <!-- Sail 1 — leech overstroke (sketchy second edge on right) -->
+      <path d="M 108,24 C 228,218 312,412 376,568" stroke="#1A1A1A" stroke-width="4" fill="none" opacity=".28" stroke-linecap="round"/>
+      <!-- Sail 1 — luff overstroke (left edge reinforcement) -->
+      <path d="M 108,24 C 86,165 68,365 60,572" stroke="#1A1A1A" stroke-width="3" fill="none" opacity=".22" stroke-linecap="round"/>
+      <!-- Sail 1 — panel seam line (fabric construction) -->
+      <path d="M 130,80 C 148,210 172,380 196,552" stroke="#1A1A1A" stroke-width="2.5" fill="none" opacity=".20" stroke-linecap="round"/>
+      <!-- Sail 2 — red, taller/narrower, offset right, slightly different lean -->
+      <path d="M 252,16 C 232,168 214,372 208,578 C 288,582 364,574 462,552 C 400,386 334,194 252,16 Z" fill="#C8102E" opacity=".62"/>
+      <!-- Sail 2 — leech overstroke -->
+      <path d="M 252,16 C 334,194 400,386 462,552" stroke="#C8102E" stroke-width="4" fill="none" opacity=".28" stroke-linecap="round"/>
+      <!-- Sail 2 — luff overstroke -->
+      <path d="M 252,16 C 232,168 214,372 208,578" stroke="#C8102E" stroke-width="3" fill="none" opacity=".22" stroke-linecap="round"/>
+      <!-- Sail 2 — panel seam line -->
+      <path d="M 276,72 C 294,220 316,400 330,558" stroke="#C8102E" stroke-width="2.5" fill="none" opacity=".18" stroke-linecap="round"/>
     </svg>
     <div style="text-align:center;max-width:1340px;display:flex;flex-direction:column;align-items:center">
       <div class="ai s3-l1" style="font-size:82px;font-weight:900;margin-bottom:30px">Leadership is like sailing.</div>
@@ -263,11 +309,11 @@ a.clink:hover{color:var(--accent,#C8102E);text-decoration:underline;text-decorat
   <!-- ═══════════════════════════════════════ -->
   <!-- SLIDE 4 — Three Moments That Matter     -->
   <!-- ═══════════════════════════════════════ -->
-  <section class="slide" id="s4" data-label="Three Moments">
-    <div class="s4-cols" style="width:100%;display:flex;gap:70px;align-items:center;justify-content:center;padding:0 80px">
+  <section class="slide" id="s4" data-label="Three Moments" style="padding:40px 0!important">
+    <div class="s4-cols" style="width:100%;display:flex;gap:12px;align-items:center;justify-content:center;padding:0 12px">
 
-      <div class="s4-col" style="flex:1;text-align:center">
-        <div class="ai s4-num" id="s4n1" style="font-size:88px;font-weight:900;line-height:1;white-space:nowrap">+0% ARR</div>
+      <div class="s4-col" style="flex:1;min-width:0;text-align:center">
+        <div class="ai s4-num" id="s4n1" style="font-size:106px;font-weight:900;line-height:1.05">+0% ARR</div>
         <div class="s4-ul" style="height:22px;margin:14px auto 36px;width:76%">
           <svg id="s4ul1" style="width:100%;height:22px;overflow:visible" viewBox="0 0 300 22" preserveAspectRatio="none" aria-hidden="true">
             <path id="s4ul1p" d="M0,14 C18,6 38,18 62,10 C84,3 108,16 134,9 C158,3 180,14 210,8 C234,3 256,15 280,10 C292,7 298,11 300,9" stroke="#C8102E" stroke-width="5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
@@ -277,8 +323,8 @@ a.clink:hover{color:var(--accent,#C8102E);text-decoration:underline;text-decorat
         <div class="ai s4-role" style="font-size:26px;font-style:italic;color:var(--text2)">Business Ops Lead, XTEL</div>
       </div>
 
-      <div class="s4-col" style="flex:1;text-align:center">
-        <div class="ai s4-num" id="s4n2" style="font-size:88px;font-weight:900;line-height:1;white-space:nowrap">0% TTV</div>
+      <div class="s4-col" style="flex:1;min-width:0;text-align:center">
+        <div class="ai s4-num" id="s4n2" style="font-size:106px;font-weight:900;line-height:1.05">0% TTV</div>
         <div class="s4-ul" style="height:22px;margin:14px auto 36px;width:76%">
           <svg id="s4ul2" style="width:100%;height:22px;overflow:visible" viewBox="0 0 300 22" preserveAspectRatio="none" aria-hidden="true">
             <path id="s4ul2p" d="M0,10 C22,18 46,4 78,13 C106,20 128,6 158,14 C184,20 204,5 232,12 C256,18 274,7 300,13" stroke="#C8102E" stroke-width="5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
@@ -288,8 +334,8 @@ a.clink:hover{color:var(--accent,#C8102E);text-decoration:underline;text-decorat
         <div class="ai s4-role" style="font-size:26px;font-style:italic;color:var(--text2)">Project Director, Planorama</div>
       </div>
 
-      <div class="s4-col" style="flex:1;text-align:center">
-        <div class="ai s4-num" id="s4n3" style="font-size:88px;font-weight:900;line-height:1;white-space:nowrap">CSAT +0pts</div>
+      <div class="s4-col" style="flex:1;min-width:0;text-align:center">
+        <div class="ai s4-num" id="s4n3" style="font-size:106px;font-weight:900;line-height:1.05">CSAT +0pts</div>
         <div class="s4-ul" style="height:22px;margin:14px auto 36px;width:76%">
           <svg id="s4ul3" style="width:100%;height:22px;overflow:visible" viewBox="0 0 300 22" preserveAspectRatio="none" aria-hidden="true">
             <path id="s4ul3p" d="M0,8 C14,16 36,5 58,13 C82,21 108,8 136,15 C162,21 184,9 212,6 C238,3 260,16 286,11 C294,9 298,13 300,11" stroke="#C8102E" stroke-width="5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
@@ -306,27 +352,35 @@ a.clink:hover{color:var(--accent,#C8102E);text-decoration:underline;text-decorat
   <!-- SLIDE 5 — AI in Action                  -->
   <!-- ═══════════════════════════════════════ -->
   <section class="slide" id="s5" data-label="AI in Action">
-    <!-- Irregular pulsing blob — organic, alive, subtle -->
-    <svg style="position:absolute;bottom:110px;right:150px;width:120px;height:120px;opacity:.2" viewBox="0 0 120 120" aria-hidden="true">
+    <!-- Dot → organic shape animation: illustrates 0→1 growth -->
+    <svg style="position:absolute;bottom:80px;right:110px;width:220px;height:220px;opacity:.22" viewBox="0 0 220 220" aria-hidden="true">
       <defs>
-        <filter id="s5blob">
-          <feTurbulence type="fractalNoise" baseFrequency="0.042" numOctaves="3" seed="8">
-            <animate attributeName="baseFrequency" values="0.038;0.048;0.038" dur="2.1s" repeatCount="indefinite"/>
-          </feTurbulence>
-          <feDisplacementMap in="SourceGraphic" scale="10" xChannelSelector="R" yChannelSelector="G"/>
+        <filter id="s5filt" x="-60%" y="-60%" width="220%" height="220%">
+          <feTurbulence type="fractalNoise" baseFrequency="0.022" numOctaves="4" seed="14"/>
+          <feDisplacementMap in="SourceGraphic" scale="22" xChannelSelector="R" yChannelSelector="G"/>
         </filter>
       </defs>
-      <ellipse cx="60" cy="60" rx="34" ry="30" fill="#1A1A1A" filter="url(#s5blob)">
-        <animate attributeName="rx" values="32;36;31;35;32" dur="2.1s" repeatCount="indefinite"/>
-        <animate attributeName="ry" values="30;28;34;27;30" dur="2.1s" repeatCount="indefinite"/>
-      </ellipse>
-      <ellipse cx="60" cy="60" rx="14" ry="12" fill="#C8102E" filter="url(#s5blob)">
-        <animate attributeName="rx" values="13;15;12;14;13" dur="2.1s" repeatCount="indefinite" begin=".4s"/>
-        <animate attributeName="ry" values="12;10;14;11;12" dur="2.1s" repeatCount="indefinite" begin=".4s"/>
-      </ellipse>
+      <!-- Outer organic shape — grows from dot -->
+      <circle cx="110" cy="110" r="3" fill="#1A1A1A" filter="url(#s5filt)">
+        <animate attributeName="r"
+          values="3;3;82;82;3"
+          keyTimes="0;0.06;0.52;0.84;1"
+          calcMode="spline"
+          keySplines="0.4 0 0.6 1;0.15 0 0.5 1;0 0 1 1;0.5 0 0.8 1"
+          dur="3.8s" repeatCount="indefinite"/>
+      </circle>
+      <!-- Inner red accent — stays small, pulses once shape is full -->
+      <circle cx="110" cy="110" r="3" fill="#C8102E" filter="url(#s5filt)">
+        <animate attributeName="r"
+          values="3;3;22;18;3"
+          keyTimes="0;0.08;0.52;0.84;1"
+          calcMode="spline"
+          keySplines="0.4 0 0.6 1;0.15 0 0.5 1;0 0 1 1;0.5 0 0.8 1"
+          dur="3.8s" repeatCount="indefinite" begin="0.15s"/>
+      </circle>
     </svg>
     <div style="max-width:1440px">
-      <div class="ai s5-hl" style="font-size:68px;font-weight:900;line-height:1.12;margin-bottom:58px">I don't just talk AI. I ship it — from zero to one.</div>
+      <div class="ai s5-hl" style="font-size:68px;font-weight:900;line-height:1.12;margin-bottom:58px">I don't just talk AI. I ship it — <span style="color:var(--accent)">from zero to one.</span></div>
       <div class="ai s5-item" style="font-size:29px;font-weight:400;margin-bottom:24px;line-height:1.45"><span style="font-weight:700;color:var(--accent)">Dust</span> — Customer support agent (ENSO) → analysis time −80%</div>
       <div class="ai s5-item" style="font-size:29px;font-weight:400;margin-bottom:24px;line-height:1.45"><span style="font-weight:700;color:var(--accent)">Langdock</span> — Sales enablement RAG (XTEL) → proposal time −50%</div>
       <div class="ai s5-item" style="font-size:29px;font-weight:400;margin-bottom:52px;line-height:1.45"><span style="font-weight:700;color:var(--accent)">Zendesk AI</span> — Self-service chatbot (ENSO) → CSAT +10pts</div>
@@ -338,16 +392,16 @@ a.clink:hover{color:var(--accent,#C8102E);text-decoration:underline;text-decorat
   <!-- SLIDE 6 — Beyond Work                   -->
   <!-- ═══════════════════════════════════════ -->
   <section class="slide" id="s6" data-label="Beyond Work">
-    <!-- Organic ecosystem — 3 irregular forms, curved connections -->
-    <svg style="position:absolute;bottom:80px;right:110px;width:260px;height:210px;opacity:.12" viewBox="0 0 260 210" fill="none" aria-hidden="true">
-      <!-- Three irregular blob nodes -->
+    <!-- Organic ecosystem — 3 bigger forms, thicker connectors -->
+    <svg style="position:absolute;bottom:60px;right:80px;width:440px;height:355px;opacity:.26" viewBox="0 0 260 210" fill="none" aria-hidden="true">
+      <!-- Three irregular blob nodes — same positions, more presence -->
       <path d="M38,100 C28,88 22,70 30,56 C38,42 58,36 72,46 C86,56 88,78 80,94 C72,110 50,114 38,100Z" fill="#1A1A1A"/>
       <path d="M112,34 C106,20 116,4 130,2 C144,0 158,10 160,26 C162,40 152,54 138,56 C124,58 118,48 112,34Z" fill="#C8102E"/>
       <path d="M188,116 C178,100 178,80 190,68 C202,56 222,58 232,72 C242,86 238,108 226,118 C214,128 198,132 188,116Z" fill="#1A1A1A"/>
-      <!-- Curved organic connectors — each subtly different -->
-      <path d="M74,68 C84,54 98,44 114,40" stroke="#1A1A1A" stroke-width="2" stroke-linecap="round" fill="none"/>
-      <path d="M156,34 C170,40 186,56 192,70" stroke="#1A1A1A" stroke-width="2" stroke-linecap="round" fill="none"/>
-      <path d="M76,100 C102,110 136,118 186,114" stroke="#1A1A1A" stroke-width="1.6" stroke-linecap="round" fill="none" stroke-dasharray="5 6"/>
+      <!-- Curved organic connectors — thicker, more visible -->
+      <path d="M74,68 C84,54 98,44 114,40" stroke="#1A1A1A" stroke-width="4.5" stroke-linecap="round" fill="none"/>
+      <path d="M156,34 C170,40 186,56 192,70" stroke="#1A1A1A" stroke-width="4.5" stroke-linecap="round" fill="none"/>
+      <path d="M76,100 C102,110 136,118 186,114" stroke="#1A1A1A" stroke-width="3.5" stroke-linecap="round" fill="none" stroke-dasharray="7 7"/>
     </svg>
     <div style="max-width:1240px;text-align:center">
       <div class="ai s6-hl" style="font-size:80px;font-weight:900;margin-bottom:14px">Building doesn't stop at the office.</div>
@@ -458,10 +512,10 @@ const CONFIG = {
   showProgressBar: true,   // thin accent line at bottom showing slide position
 
   // === TRANSITION ===
-  transitionMs: 700, // Blob transition duration between slides (ms)
+  transitionMs: 900, // Sail overlay visible duration between slides (ms)
 
   // === SLIDE DURATIONS (seconds; last slide has no autoplay) ===
-  durations: [3, 6, 7, 10, 10, 8, 6, 8, 6],
+  durations: [2, 4, 5, 9, 9, 7, 5, 7, 5],
 
   // === CONTACT INFO ===
   contact: {
@@ -563,8 +617,8 @@ if(window.matchMedia('(prefers-reduced-motion:reduce)').matches){
   r.style.setProperty('--text2',   c.textSecondary);
   r.style.setProperty('--chip-bg', c.chipBg);
   r.style.setProperty('--font',    CONFIG.fonts.main);
+  document.body.style.background = c.background;
   document.getElementById('canvas').style.background = c.background;
-  document.getElementById('blob-overlay').style.background = c.background;
   // Progress bar visibility
   document.getElementById('pbar').style.display = CONFIG.showProgressBar ? 'block' : 'none';
 })();
@@ -606,11 +660,11 @@ function showSlide(n){
 }
 
 // ══════════════════════════════════════════════════════════════════════
-// BLOB TRANSITION
+// SAIL TRANSITION — centered 200×200 sail animation on full overlay
+// Two distinct variants picked randomly on each transition.
 // ══════════════════════════════════════════════════════════════════════
-const overlay = document.getElementById('blob-overlay');
-const bvs = [...document.querySelectorAll('.bv')];
-let lastBlob = -1;
+const svEls = document.querySelectorAll('.sv');
+let lastSV = -1;
 
 function goTo(n){
   if(transitioning) return;
@@ -618,20 +672,33 @@ function goTo(n){
   transitioning = true;
   clearAuto();
 
-  // Pick a blob variant (not the same as last time)
-  let b; do{ b=Math.floor(Math.random()*3); }while(b===lastBlob);
-  lastBlob = b;
-  bvs.forEach((v,i)=>v.classList.toggle('on',i===b));
+  if(rm){
+    cur = n; showSlide(cur); transitioning = false;
+    if(!paused) scheduleAuto();
+    return;
+  }
+
+  // Pick variant — never repeat same one twice in a row
+  let v; do{ v=Math.floor(Math.random()*2); }while(v===lastSV && svEls.length>1);
+  lastSV = v;
+
+  const overlay = document.getElementById('sail-overlay');
+  svEls.forEach((el,i)=>el.classList.toggle('on', i===v));
   overlay.classList.add('show');
 
+  // Change slide while overlay is fully covering the canvas
   setTimeout(()=>{
     cur = n;
     showSlide(cur);
+    // Fade overlay out after slide has updated
     setTimeout(()=>{
       overlay.classList.remove('show');
-      transitioning = false;
-      if(!paused) scheduleAuto();
-    }, 160);
+      // Unlock after fade-out completes
+      setTimeout(()=>{
+        transitioning = false;
+        if(!paused) scheduleAuto();
+      }, 240);
+    }, 80);
   }, CONFIG.transitionMs);
 }
 
